@@ -24,13 +24,18 @@ class AuthorService implements Service
         return $author;
     }
 
-    public function update($data)
+    public function update($data, $entity)
     {
-        // TODO: Implement update() method.
+        $entity->update($data);
+
+        return $entity;
     }
 
-    public function destroy($data)
+    public function destroy($entity)
     {
-        // TODO: Implement delete() method.
+        if ($entity->exists())
+        {
+            $entity->delete();
+        }
     }
 }

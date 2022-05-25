@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Library;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Library\DeleteBookRequest;
 use App\Http\Requests\Library\StoreBookRequest;
+use App\Http\Requests\Library\UpdateBookRequest;
 use App\Http\Resources\BookResource;
+use App\Models\Book;
 use App\Services\BookService;
 
 class BookController extends Controller
@@ -22,7 +25,7 @@ class BookController extends Controller
 
         return response()->json(
             BookResource::collection($books)
-        );
+        , 200);
     }
 
     public function store(StoreBookRequest $request): \Illuminate\Http\JsonResponse
@@ -31,24 +34,27 @@ class BookController extends Controller
 
         return response()->json(
             new BookResource($book)
-        );
+        , 201);
     }
 
-    public function update($request): \Illuminate\Http\JsonResponse
+    public function update(UpdateBookRequest $request, Book $book): \Illuminate\Http\JsonResponse
     {
-        $book = $this->bookService->update($request->validated());
+        $bookUpdated = $this->bookService->update($request->validated(), $book);
 
         return response()->json(
-            new BookResource($book)
-        );
+            new BookResource($bookUpdated)
+        , 200);
     }
 
-    public function destroy($request): \Illuminate\Http\JsonResponse
+    public function destroy(DeleteBookRequest $request, Book $book): \Illuminate\Http\JsonResponse
     {
-        $book = $this->bookService->destroy($request->validated());
+        $this->bookService->destroy($book);
 
         return response()->json(
-            new BookResource($book)
+            [
+                'message' => 'Успешное удаление книги'
+            ]
+            , 200
         );
     }
 }

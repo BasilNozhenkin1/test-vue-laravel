@@ -1,8 +1,8 @@
-import Vue from "vue";
+window.Vue = require('vue').default;
 import VueRouter from "vue-router";
 
 
-Vue.use(VueRouter);
+window.Vue.use(VueRouter);
 
 
 import MainIndex from '../components/main/Index.vue';
